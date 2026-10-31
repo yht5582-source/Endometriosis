@@ -16,3 +16,10 @@ test('adolescent referral is paediatric/adolescent gynaecology',()=>{assert.equa
 test('urgent path carries no extra notes',()=>{assert.equal(assess({...base,acute:true,familyHx:true,fertility:true}).notes.length,0);});
 test('cases carry a filter group',()=>{for(const c of cases)assert.ok(['疼痛','生育'].includes(c.group));});
 test('endometrioma result does not describe deep-disease imaging',()=>{const r=assess({...base,imaging:'endometrioma'});assert.ok(!r.actions[0].includes('MRI'));assert.ok(assess({...base,imaging:'deep'}).actions[0].includes('MRI'));});
+import {nhi} from '../clinical.mjs';
+const nb={stage:0,proof:false,organ:false,adverse:false,months:0,hmb:false,hb:'',lngRecent:false};
+const g=r=>r.items.find(i=>i.id==='gnrh');
+test('NHI GnRH needs rAFS >=II, surgical+pathology proof and a hormone contraindication or adverse reaction',()=>{assert.equal(g(nhi({...nb,stage:3,proof:true})).status,'no');assert.equal(g(nhi({...nb,stage:1,proof:true,organ:true})).status,'no');assert.equal(g(nhi({...nb,stage:2,organ:true})).status,'no');const ok=nhi({...nb,stage:2,proof:true,adverse:true});assert.equal(g(ok).status,'preauth');assert.ok(ok.gnrhEligible);});
+test('NHI GnRH capped at 6 consecutive months',()=>{assert.equal(g(nhi({...nb,stage:4,proof:true,organ:true,months:6})).status,'no');assert.match(g(nhi({...nb,stage:4,proof:true,organ:true,months:4})).detail[0],/剩 2 個月/);});
+test('NHI danazol covered without pre-authorisation',()=>{assert.equal(nhi(nb).items.find(i=>i.id==='danazol').status,'yes');});
+test('NHI LNG-IUS only for heavy bleeding with Hb <=10 and not within 5 years',()=>{const l=x=>nhi({...nb,...x}).items.find(i=>i.id==='lngius').status;assert.equal(l({}),'no');assert.equal(l({hmb:true,hb:'10.5'}),'no');assert.equal(l({hmb:true,hb:'9'}),'yes');assert.equal(l({hmb:true,hb:'9',lngRecent:true}),'no');assert.equal(l({hb:'9'}),'no');});

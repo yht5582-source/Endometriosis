@@ -13,3 +13,21 @@
 .button.reset{background:transparent;border-color:var(--line);color:var(--ink)}
 .button.reset:hover{background:#f5edf0}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.badge{display:inline-block;vertical-align:middle;margin-left:6px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:800;letter-spacing:.04em}
+.badge.intl{background:#dce8f6;color:#24507e}
+.badge.tw{background:#dcefe2;color:#226040}
+.source-group{margin:0 0 8px}.source-group~.source-group{margin-top:22px}
+.tw-note{width:100%;margin:-8px 0 22px;padding:12px 14px;border-radius:6px;background:#e6f3ea;color:#1f4a33;font-size:12px;line-height:1.8}
+.tw-note a{color:#1f6b45;font-weight:800;margin-left:4px}
+.tool-output.tw{background:#1f3b2e;color:#eef6f0}
+.tool-output.tw .output-note{border-color:#5b7d6a;color:#cfe3d6}
+.nhi-list{width:100%;display:grid;gap:10px;margin:8px 0 24px}
+.nhi-item{display:flex;gap:12px;align-items:flex-start;padding:12px;border-radius:6px;background:#ffffff10;border-left:4px solid #8aa596}
+.nhi-item.yes{border-color:#7fd3a0}.nhi-item.preauth{border-color:#f0c87a}.nhi-item.no{border-color:#e9937a}.nhi-item.info{border-color:#9fb8c9}
+.nhi-icon{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#ffffff1f;font-weight:800;font-size:13px}
+.nhi-item strong{display:block;font-size:13px}
+.nhi-item small{display:block;color:#bcd6c6;font-size:11px;margin-top:2px}
+.nhi-item ul{margin:6px 0 0;padding-left:18px;font-size:12px;line-height:1.7}
+.num-field{display:flex;flex-direction:row;align-items:center;gap:8px;font-size:13px;margin:12px 0;flex-wrap:wrap}
+.num-field input{width:90px;padding:7px 9px;border:1px solid var(--line);border-radius:5px;font:inherit}
+.num-field span{color:var(--muted);font-size:12px}

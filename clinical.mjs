@@ -96,3 +96,30 @@ export const questions=[
   {level:'進階',q:'對內膜異位症患者使用分期的適當方式？',a:['記錄病灶但不以分期單獨決定疼痛治療','分期可直接預測疼痛強度','分期取代生育目標'],correct:0,why:'NICE 建議治療依症狀、偏好及優先事項，而非僅依分期。'},
   {level:'進階',q:'青少年嚴重經痛與正常超音波，最合適的解讀？',a:['仍可能有病灶，需持續評估與適齡治療','必須等成年才處理','CA125 是確診法'],correct:0,why:'青少年專節強調避免漏診與延誤；正常影像不排除病灶。'}
 ];
+
+/* 台灣健保：藥品給付規定 第五節 激素及影響內分泌機轉藥物（115.08.21 更新）。
+   只收錄條文中與子宮內膜異位症直接相關的規定。 */
+export const nhiSource={name:'健保署 藥品給付規定 第五節 激素及影響內分泌機轉藥物（115.08.21 更新）',url:'https://www.nhi.gov.tw/ch/cp-7593-ad2a9-3397-1.html',note:'5.2.1 Danazol、5.3.5 LNG-IUS、5.5.1 GnRH analogue'};
+
+export function nhi(v){
+  const stage=Number(v.stage)||0;
+  const items=[];
+  const gnrhMissing=[];
+  if(stage<2)gnrhMissing.push(stage===1?'rAFS 第一期不符（需第二期以上）':'尚未有客觀診斷的 rAFS 分期（需第二期以上）');
+  if(!v.proof)gnrhMissing.push('需附手術紀錄及病理報告證明');
+  if(!v.organ&&!v.adverse)gnrhMissing.push('需符合其一：肝／腎功能不全或鬱血性心臟病而不適用荷爾蒙，或曾因荷爾蒙治療過敏／不可逆不良反應');
+  const months=Math.max(0,Number(v.months)||0);
+  let gnrh;
+  if(gnrhMissing.length)gnrh={status:'no',label:'不符給付條件',detail:gnrhMissing};
+  else if(months>=6)gnrh={status:'no',label:'已達連續 6 個月上限',detail:['條文規定連續六個月為上限；續用需另行評估，健保不給付超過上限部分。']};
+  else gnrh={status:'preauth',label:'符合條件，需事前審查',detail:[`可申請事前審查；核准後連續使用上限 6 個月（已用 ${months} 個月，剩 ${6-months} 個月）。`]};
+  items.push({id:'gnrh',drug:'GnRH analogue（leuprorelin、goserelin、triptorelin、buserelin、nafarelin 等）',rule:'5.5.1 (4)',...gnrh});
+  items.push({id:'danazol',drug:'Danazol',rule:'5.2.1',status:'yes',label:'可給付',detail:['給付規定列「子宮內膜異位」為適用病例，條文無事前審查要求。']});
+  const anemia=!!v.hmb&&Number(v.hb)>0&&Number(v.hb)<=10;
+  items.push({id:'lngius',drug:'Levonorgestrel 子宮內投藥系統（如 Mirena）',rule:'5.3.5',status:anemia?(v.lngRecent?'no':'yes'):'no',
+    label:anemia?(v.lngRecent?'五年內已用過':'可給付（貧血適應）'):'疼痛適應不給付',
+    detail:anemia?[v.lngRecent?'每次使用後五年內不得再次使用。':'連續 ≥3 個月經血過多致 Hb ≤10 g/dL 符合 5.3.5；給付理由是貧血而非內膜異位症疼痛。']
+      :['5.3.5 限連續 3 個月以上經血過多導致嚴重貧血（Hb ≤10 g/dL）；單純內膜異位症疼痛需自費。']});
+  items.push({id:'dienogest',drug:'Dienogest（如 Visanne）、複方口服避孕藥、NSAID',rule:'—',status:'info',label:'無特別限制條文',detail:['第五節沒有針對這些藥物用於內膜異位症的專屬規定；依通則及藥品許可證適應症，是否收載請查健保用藥品項。']});
+  return {items,gnrhEligible:gnrh.status==='preauth'};
+}
