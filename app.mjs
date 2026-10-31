@@ -33,3 +33,6 @@ nhiForm.addEventListener('input',renderNhi);
 nhiForm.addEventListener('reset',()=>setTimeout(renderNhi));
 renderNhi();
 $('#nhi-source-list').innerHTML=`<a class="source-item" href="${esc(nhiSource.url)}" target="_blank" rel="noopener noreferrer"><span>${String(sources.length+1).padStart(2,'0')}</span><span><strong>${esc(nhiSource.name)}</strong><small>${esc(nhiSource.note)}</small></span><span aria-hidden="true">↗</span></a>`;
+const navLinks=[...document.querySelectorAll('.topbar nav a')];
+const spy=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)navLinks.forEach(a=>{const on=a.getAttribute('href')==='#'+e.target.id;a.classList.toggle('current',on);on?a.setAttribute('aria-current','true'):a.removeAttribute('aria-current');});}),{rootMargin:'-40% 0px -55% 0px'});
+navLinks.forEach(a=>{const s=document.querySelector(a.getAttribute('href'));if(s)spy.observe(s);});
