@@ -1,7 +1,8 @@
 export const sources=[
   {name:'ESHRE Endometriosis Guideline (2022)',url:'https://www.eshre.eu/Guidelines-and-Legal/Guidelines/Endometriosis-guideline',note:'診斷、疼痛、手術、生育與青少年照護'},
   {name:'NICE NG73 Recommendations (last updated 11 Nov 2024)',url:'https://www.nice.org.uk/guidance/ng73/chapter/Recommendations',note:'症狀（1.3）、藥物（1.4）、超音波與轉診（1.5）、生育（1.10）'},
-  {name:'ESHRE guideline full text (PDF)',url:'https://www.eshre.eu/-/media/sitecore-files/Guidelines/Endometriosis/ESHRE-GUIDELINE-ENDOMETRIOSIS-2022_2.pdf',note:'正常影像、經驗性治療與腹腔鏡的位置；ART 前囊腫手術'}
+  {name:'ESHRE guideline full text (PDF)',url:'https://www.eshre.eu/-/media/sitecore-files/Guidelines/Endometriosis/ESHRE-GUIDELINE-ENDOMETRIOSIS-2022_2.pdf',note:'正常影像、經驗性治療與腹腔鏡的位置；ART 前囊腫手術；特殊族群與建議編號'},
+  {name:'CDC U.S. Medical Eligibility Criteria 2024, Appendix K',url:'https://www.cdc.gov/contraception/hcp/usmec/summary-contraceptive.html',note:'先兆偏頭痛使用複方荷爾蒙與黃體素的分類（病例 07）'}
 ];
 
 const SYMPTOMS=['dysmenorrhea','pelvicPain','dyspareunia','dyschezia','urinary'];

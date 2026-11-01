@@ -1,0 +1,11 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {assess,nhi} from '../clinical.mjs';
+import {moreCases,exam,mindMap,EXAM_LEVEL} from '../teach-content.mjs';
+const nb={stage:0,proof:false,organ:false,adverse:false,months:0,hmb:false,hb:'',lngRecent:false};
+test('8 extra cases with unique ids and 4 valid options',()=>{assert.equal(moreCases.length,8);assert.equal(new Set(moreCases.map(c=>c.id)).size,8);for(const c of moreCases){assert.equal(c.options.length,4,c.id);assert.ok(c.answer>=0&&c.answer<4,c.id);assert.ok(c.why&&c.next&&c.src,c.id);assert.ok(['疼痛','生育','特殊'].includes(c.group),c.id);}});
+test('every case triage matches the engine',()=>{for(const c of moreCases)assert.equal(assess(c.triage).code,c.expectCode,c.id);});
+test('NHI case matches the engine, and the 6-month cap still applies',()=>{const c=moreCases.find(x=>x.nhiCase);const g=v=>nhi({...nb,...v}).items.find(i=>i.id==='gnrh').status;assert.equal(g(c.nhiCase),c.expectGnrh);assert.equal(g({...c.nhiCase,months:6}),'no');assert.equal(g({...c.nhiCase,adverse:false}),'no');});
+test('exam has 20 questions, 10 basic + 10 advanced',()=>{assert.equal(exam.length,20);assert.equal(exam.filter(q=>q.tier==='基礎').length,10);assert.equal(exam.filter(q=>q.tier==='高階').length,10);for(const q of exam){assert.equal(q.level,EXAM_LEVEL);assert.equal(q.a.length,4,q.q);assert.ok(q.why&&q.src,q.q);assert.equal(new Set(q.a).size,4,q.q);}});
+test('answer key is balanced A–D, 5 each',()=>{for(const i of [0,1,2,3])assert.equal(exam.filter(q=>q.correct===i).length,5,String(i));});
+test('exam statement on LNG-IUS agrees with the NHI engine',()=>{const l=v=>nhi({...nb,...v}).items.find(i=>i.id==='lngius').status;assert.equal(l({}),'no');assert.equal(l({hmb:true,hb:'10'}),'yes');});
+test('mind map has both sides, every leaf cited, Taiwan branch flagged',()=>{for(const side of [mindMap.dx,mindMap.tx]){assert.ok(side.length>=5);for(const b of side){assert.ok(b.t&&b.s&&b.l.length);for(const x of b.l)assert.ok(x.k&&x.x&&x.r,x.k);}}const tw=mindMap.tx.filter(b=>b.tw);assert.equal(tw.length,1);assert.ok(tw[0].l.every(x=>x.tw));assert.ok(mindMap.dx.concat(mindMap.tx.filter(b=>!b.tw)).every(b=>b.l.every(x=>!x.tw)));});
