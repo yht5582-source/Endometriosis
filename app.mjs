@@ -1,5 +1,5 @@
-import {assess,nhi,nhiSource,cases as baseCases,questions as baseQuestions,sources} from './clinical.mjs?v=1.4';
-import {moreCases,exam,mindMap,EXAM_LEVEL} from './teach-content.mjs?v=1.4';
+import {assess,nhi,nhiSource,cases as baseCases,questions as baseQuestions,sources} from './clinical.mjs?v=1.5';
+import {moreCases,exam,mindMap,EXAM_LEVEL} from './teach-content.mjs?v=1.5';
 const cases=[...baseCases,...moreCases],questions=[...exam,...baseQuestions];
 const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
